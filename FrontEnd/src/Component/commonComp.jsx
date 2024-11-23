@@ -13,4 +13,4 @@ function commonComp() {
   )
 }
 
-export default commonComp
+export default commonComp;
