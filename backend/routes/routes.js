@@ -87,4 +87,16 @@ router.get('/parking-space', async (req, res) => {
     res.status(200).json(parkingSpace);
 });
 
+router.get('/nearest-parking-spaces', async (req, res) => {
+    const { adminId, latitude, longitude } = req.query;
+
+    try {
+        const nearbySpaces = await findNearestParkingSpaces(adminId, parseFloat(latitude), parseFloat(longitude));
+        res.status(200).json(nearbySpaces);
+    } catch (error) {
+        console.error("Error finding nearest parking spaces:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;
