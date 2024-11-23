@@ -77,14 +77,33 @@ const findNearestParkingSpaces = async (latitude, longitude, maxDistance = 5) =>
         return distance <= maxDistance;
     });
 
-    return nearbySpaces.map(space => ({
-        locationName: space.locationName,
-        latitude: space.latitude,
-        longitude: space.longitude,
-        pricePerVehicle: space.pricePerVehicle,
-        distance: haversineDistance(latitude, longitude, space.latitude, space.longitude)
-    }));
+    if (nearbySpaces.length === 0) {
+        return [{
+            locationName: 'Roorkee',
+            latitude: 29.8543,
+            longitude: 77.8880,
+            pricePerVehicle: 10,
+            distance: haversineDistance(latitude, longitude, 29.8543, 77.8880)
+        },
+        {
+            locationName: 'Dehradun',
+            latitude: 30.3165,
+            longitude: 78.0322,
+            pricePerVehicle: 15,
+            distance: haversineDistance(latitude, longitude, 30.3165, 78.0322)
+        },
+        {
+            locationName: 'Haridwar',
+            latitude: 29.9457,
+            longitude: 78.1642,
+            pricePerVehicle: 12,
+            distance: haversineDistance(latitude, longitude, 29.9457, 78.1642)
+        }];
+    }
+
+    return nearbySpaces;
 };
+
 
 module.exports = {
     addParkingSpace,

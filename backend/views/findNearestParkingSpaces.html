@@ -48,6 +48,20 @@
     <div id="parkingSpacesContainer"></div>
 
     <script>
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const toRad = (value) => (value * Math.PI) / 180;
+            const R = 6371; // Radius of the Earth in kilometers
+
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distance in kilometers
+        }
+
         document.getElementById('getLocationButton').addEventListener('click', function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -65,10 +79,10 @@
             event.preventDefault();
 
             const coordinates = document.getElementById('coordinates').value;
-            
+            const [userLat, userLon] = coordinates.split(',').map(coord => parseFloat(coord.trim()));
 
             try {
-                const response = await fetch(`/nearest-parking-spaces?coordinates=${coordinates}`);
+                const response = await fetch(`/nearest-parking-spaces?latitude=${userLat}&longitude=${userLon}`);
                 const parkingSpaces = await response.json();
 
                 const container = document.getElementById('parkingSpacesContainer');
@@ -78,13 +92,14 @@
                     container.innerText = 'No nearby parking spaces found.';
                 } else {
                     parkingSpaces.forEach(space => {
+                        const distance = haversineDistance(userLat, userLon, space.latitude, space.longitude);
                         const spaceDiv = document.createElement('div');
                         spaceDiv.className = 'parking-space';
                         spaceDiv.innerHTML = `
                             <strong>${space.locationName}</strong><br>
                             Location: ${space.latitude}, ${space.longitude}<br>
                             Price per Vehicle: $${space.pricePerVehicle}<br>
-                            Distance: ${space.distance.toFixed(2)} km
+                            Distance: ${distance.toFixed(2)} km
                         `;
                         container.appendChild(spaceDiv);
                     });
