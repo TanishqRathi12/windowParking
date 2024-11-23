@@ -17,7 +17,7 @@ function App() {
       element:<Admin/>
     },
     {
-      path:"/available",
+      path:"/available/*",
       element:<Available/>
     },
     {
