@@ -545,6 +545,13 @@ const registerAdmin = async (adminName, email, password) => {
     }));
 
     console.log(`Admin registered successfully with ID: ${adminId}`);
+
+    const mobileDeviceTableName = `${adminId}_mobileDevice_ParkingSpace`;
+    await createTable(mobileDeviceTableName, 'PK', 'SK');
+    await waitForTable(mobileDeviceTableName);
+
+    console.log(`Table ${mobileDeviceTableName} created successfully`);
+
     return adminData;
 };
 
@@ -570,7 +577,7 @@ const loginAdmin = async (email, password) => {
         }
 
         console.log("Admin logged in successfully");
-        return { message: 'Login successful', adminData };
+        return { message: 'Login successful', adminId };
     } catch (error) {
         console.error("Error during admin login:", error);
         throw error;
