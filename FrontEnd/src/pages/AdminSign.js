@@ -4,12 +4,14 @@ function AdminSign() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [parking, setParking] = useState("");
+  const [region, setregion] = useState("");
   const [error, setError] = useState(null);
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Here you would typically handle the login logic
-    console.log("Login attempted with:", { name, password, parking });
+    console.log("Login attempted with:", { name, password, parking,region });
+    
   };
 
   return (
@@ -49,6 +51,22 @@ function AdminSign() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Region
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={region}
+              onChange={(e) => setregion(e.target.value)}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

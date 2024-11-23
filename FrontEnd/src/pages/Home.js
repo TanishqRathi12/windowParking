@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Car, UserCircle, MapPin, Clock, CreditCard, Phone } from 'lucide-react';
 
 function HomePage() {
+
+    const [location, setLocation] = useState(null);
+    const [error, setError] = useState("");
+    const getIPLocation = async () => {
+          try {
+            const response = await fetch(`https://ipinfo.io?token=dfdab375e00a33`);
+            const data = await response.json();
+            console.log(data);
+            setLocation({
+              city: data.city,
+              region: data.region,
+              country: data.country,
+              coordinates: data.loc.split(","),
+            });
+            setError(null);
+          } catch (error) {
+            setError("Unable to retrieve your location via IP");
+            console.error("IP-based geolocation error:", error);
+          }
+        };
+    useEffect(() => {
+      getIPLocation();
+    }, [])
+    
+
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
       <header className="bg-white shadow-md">
@@ -17,7 +45,7 @@ function HomePage() {
               <span>Admin Login</span>
             </Link>
             <Link
-              to="/available"
+              to={`/available/:${location?(location.coordinates[0]+'?'+location.coordinates[1]):"00"}`}
               className="inline-flex items-center bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300"
             >
               <Car className="mr-2" size={20} />

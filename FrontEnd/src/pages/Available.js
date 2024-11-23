@@ -33,8 +33,8 @@ function Available() {
         setLocations(data); // Assume backend returns an array of locations
         setError(null); // Clear any previous errors
       } catch (err) {
-        setLocations(sample);
-        // setError(err.message);
+        // setLocations(sample);
+        setError(err.message);
       } finally {
         setLoading(false); // Loading is complete
       }
