@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Admin Portal</h1>
+    <p id="adminIdDisplay"></p>
+
+    <a href="#" class="button" id="createParkingSpaceLink">Create Parking Space</a>
+    <a href="#" class="button" id="accessCameraLink">Access Phone Camera</a>
+
+    <script>
+        // Extract adminId from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const adminId = urlParams.get('adminId');
+        document.getElementById('adminIdDisplay').innerText = `Admin ID: ${adminId}`;
+
+        // Set up links with adminId
+        document.getElementById('createParkingSpaceLink').href = `/addParkingSpace?adminId=${adminId}`;
+        document.getElementById('accessCameraLink').href = `/accessCamera?adminId=${adminId}`;
+    </script>
+</body>
+</html>

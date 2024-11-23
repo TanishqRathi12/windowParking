@@ -38,5 +38,15 @@ router.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'login.html'));
 });
 
+router.get('/adminPortal', (req, res) => {
+    const adminId = req.query.adminId;
+    if (!adminId) {
+        return res.status(400).json({ error: 'Admin ID is required' });
+    }
+
+    // Serve the adminPortal.html file
+    res.sendFile(path.join(__dirname, '../views', 'adminPortal.html'));
+});
+
 
 module.exports = router;

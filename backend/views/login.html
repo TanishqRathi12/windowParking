@@ -64,7 +64,12 @@
                 });
 
                 const result = await response.json();
-                document.getElementById('responseMessage').innerText = result.message || result.error;
+                if (result.adminId) {
+                    // Redirect to adminPortal with adminId as a parameter
+                    window.location.href = `/adminPortal?adminId=${result.adminId}`;
+                } else {
+                    document.getElementById('responseMessage').innerText = result.error || 'Login failed';
+                }
             } catch (error) {
                 document.getElementById('responseMessage').innerText = 'Error: ' + error.message;
             }
