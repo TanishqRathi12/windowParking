@@ -25,6 +25,9 @@
         .button:hover {
             background-color: #45a049;
         }
+        .parking-space {
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -33,6 +36,9 @@
 
     <a href="#" class="button" id="createParkingSpaceLink">Create Parking Space</a>
     <a href="#" class="button" id="accessCameraLink">Access Phone Camera</a>
+
+    <h2>Your Parking Spaces</h2>
+    <div id="parkingSpacesContainer"></div>
 
     <script>
         // Extract adminId from URL parameters
@@ -43,6 +49,50 @@
         // Set up links with adminId
         document.getElementById('createParkingSpaceLink').href = `/addParkingSpace.html?adminId=${adminId}`;
         document.getElementById('accessCameraLink').href = `/accessCamera?adminId=${adminId}`;
+
+        // Fetch and display parking spaces
+        async function fetchParkingSpaces() {
+            try {
+                const response = await fetch(`/parking-spaces?adminId=${adminId}`);
+                const parkingSpaces = await response.json();
+
+                const container = document.getElementById('parkingSpacesContainer');
+                container.innerHTML = ''; // Clear existing content
+
+                if (parkingSpaces.length === 0) {
+                    container.innerText = 'No parking spaces found.';
+                } else {
+                    parkingSpaces.forEach(space => {
+                        const spaceDiv = document.createElement('div');
+                        spaceDiv.className = 'parking-space';
+                        spaceDiv.innerHTML = `
+                            <strong>${space.locationName}</strong><br>
+                            Location: ${space.latitude}, ${space.longitude}<br>
+                            Capacity: ${space.regionCapacity}<br>
+                            Price per Vehicle: $${space.pricePerVehicle}<br>
+                            <button class="button" onclick="editParkingSpace('${space.PK}')">Edit</button>
+                            <button class="button" onclick="deleteParkingSpace('${space.PK}')">Delete</button>
+                        `;
+                        container.appendChild(spaceDiv);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching parking spaces:', error);
+                document.getElementById('parkingSpacesContainer').innerText = 'Error loading parking spaces.';
+            }
+        }
+
+        // Call the function to fetch parking spaces on page load
+        fetchParkingSpaces();
+
+        // Placeholder functions for edit and delete actions
+        function editParkingSpace(spaceId) {
+            alert(`Edit functionality for space ID: ${spaceId} is not implemented yet.`);
+        }
+
+        function deleteParkingSpace(spaceId) {
+            alert(`Delete functionality for space ID: ${spaceId} is not implemented yet.`);
+        }
     </script>
 </body>
 </html>

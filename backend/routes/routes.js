@@ -1,7 +1,7 @@
 const express = require('express');
 const { registerAdmin,loginAdmin } = require('../controller/dynamo');
 const path = require('path');
-const { addParkingSpace } = require('../controller/parkingController');
+const { addParkingSpace,getParkingSpace,getAllParkingSpaces } = require('../controller/parkingController');
 
 const router = express.Router();
 
@@ -72,6 +72,19 @@ router.post('/parking-spaces', async (req, res) => {
         console.error("Error adding parking space:", error);
         res.status(500).json({ error: error.message });
     }
+});
+
+router.get('/parking-spaces', async (req, res) => {
+    const adminId = req.query.adminId;
+    const parkingSpaces = await getAllParkingSpaces(adminId);
+    res.status(200).json(parkingSpaces);
+});
+
+router.get('/parking-space', async (req, res) => {
+    const adminId = req.query.adminId;
+    const spaceId = req.query.spaceId;
+    const parkingSpace = await getParkingSpace(adminId, spaceId);
+    res.status(200).json(parkingSpace);
 });
 
 module.exports = router;

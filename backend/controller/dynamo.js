@@ -305,16 +305,7 @@
 //     }
 // };
 
-// const getTableData = async (tableName) => {
-//     try {
-//         const data = await dynamoDB.send(new ScanCommand({ TableName: tableName }));
-//         return data.Items;
-//     } catch (error) {
-//         console.error(`Error retrieving data from table ${tableName}:`, error);
-//         throw error;
-//     }
-// };
- 
+
 
 
 // const deletestudentData = async (data) => {
@@ -445,6 +436,15 @@ const getItemData = async (tableName, pk, sk) => {
     }
 };
 
+const getTableData = async (tableName) => {
+    try {
+        const data = await dynamoDB.send(new ScanCommand({ TableName: tableName }));
+        return data.Items;
+    } catch (error) {
+        console.error(`Error retrieving data from table ${tableName}:`, error);
+        throw error;
+    }
+};
 const createTable = async (tableName, partitionKey, sortKey) => {
     console.log("Creating table",tableName);
     const params = {
@@ -590,6 +590,8 @@ module.exports = {
     waitForTable,
     checkTableExists,
     ensureOrganizationsTableExists,
-    loginAdmin
+    loginAdmin,
+    getItemData,
+    getTableData
 };
 
