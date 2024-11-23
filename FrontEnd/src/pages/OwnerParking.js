@@ -13,6 +13,7 @@ function OwnerParking() {
         parkingCapacity: 121,
       },
     ];
+    
 
     setparkingList(sample);
   }, []);

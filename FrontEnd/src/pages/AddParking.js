@@ -28,7 +28,7 @@ function AddParking() {
     
     try {
       // Send data to the backend (replace URL with your actual endpoint)
-      const response = await fetch("http://localhost:5000/parking-spaces", {
+      const response = await fetch(`http://localhost:5000/parking-spaces?adminId=${id.substring(1)}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
