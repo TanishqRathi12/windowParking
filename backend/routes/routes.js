@@ -1,7 +1,7 @@
 const express = require('express');
 const { registerAdmin,loginAdmin } = require('../controller/dynamo');
 const path = require('path');
-const { addParkingSpace,getParkingSpace,getAllParkingSpaces } = require('../controller/parkingController');
+const { addParkingSpace,getParkingSpace,getAllParkingSpaces,findNearestParkingSpaces } = require('../controller/parkingController');
 
 const router = express.Router();
 
@@ -88,7 +88,8 @@ router.get('/parking-space', async (req, res) => {
 });
 
 router.get('/nearest-parking-spaces', async (req, res) => {
-    const { adminId, latitude, longitude } = req.query;
+    const { adminId, coordinates } = req.query;
+    const [latitude, longitude] = coordinates.split(',').map(coord => coord.trim());
 
     try {
         const nearbySpaces = await findNearestParkingSpaces(adminId, parseFloat(latitude), parseFloat(longitude));
@@ -97,6 +98,10 @@ router.get('/nearest-parking-spaces', async (req, res) => {
         console.error("Error finding nearest parking spaces:", error);
         res.status(500).json({ error: error.message });
     }
+});
+
+router.get('/findNearestParkingSpaces.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'findNearestParkingSpaces.html'));
 });
 
 module.exports = router;

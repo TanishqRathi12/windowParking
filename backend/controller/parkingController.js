@@ -41,8 +41,37 @@ const getAllParkingSpaces = async (adminId) => {
     return data.map(item => unmarshall(item));
 };
 
-const findNearestParkingSpaces = async (adminId, latitude, longitude, maxDistance = 5) => {
-    const allSpaces = await getAllParkingSpaces(adminId);
+// Fetch all parking spaces from all organizations
+const getAllParkingSpacesFromAllOrganizations = async () => {
+    try {
+        // Fetch all admin IDs from the Parking_Organization table
+        const organizationData = await getTableData('Parking_Organizations');
+        if (!organizationData || organizationData.length === 0) {
+            console.error('No items found in Parking_Organization table.');
+            return [];
+        }
+
+        const adminIds = organizationData.map(item => unmarshall(item).id);
+
+        let allSpaces = [];
+        for (const adminId of adminIds) {
+            const tableName = `${adminId}_mobileDevice_ParkingSpace`;
+            const spaces = await getTableData(tableName);
+            if (spaces) {
+                allSpaces = allSpaces.concat(spaces.map(item => unmarshall(item)));
+            }
+        }
+
+        return allSpaces;
+    } catch (error) {
+        console.error('Error fetching parking spaces from all organizations:', error);
+        throw error;
+    }
+};
+
+// Find nearest parking spaces without requiring adminId
+const findNearestParkingSpaces = async (latitude, longitude, maxDistance = 5) => {
+    const allSpaces = await getAllParkingSpacesFromAllOrganizations();
     const nearbySpaces = allSpaces.filter(space => {
         const distance = haversineDistance(latitude, longitude, space.latitude, space.longitude);
         return distance <= maxDistance;
@@ -57,9 +86,9 @@ const findNearestParkingSpaces = async (adminId, latitude, longitude, maxDistanc
     }));
 };
 
-
 module.exports = {
     addParkingSpace,
     getParkingSpace,
-    getAllParkingSpaces
+    getAllParkingSpaces,
+    findNearestParkingSpaces
 };

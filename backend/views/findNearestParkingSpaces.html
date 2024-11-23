@@ -51,9 +51,8 @@
         document.getElementById('getLocationButton').addEventListener('click', function() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    document.getElementById('coordinates').value = `${latitude}, ${longitude}`;
+                    const coordinates = position.coords.latitude + ',' + position.coords.longitude;
+                    document.getElementById('coordinates').value = coordinates;
                 }, function(error) {
                     alert('Error getting location: ' + error.message);
                 });
@@ -66,10 +65,10 @@
             event.preventDefault();
 
             const coordinates = document.getElementById('coordinates').value;
-            const [latitude, longitude] = coordinates.split(',').map(coord => coord.trim());
+            
 
             try {
-                const response = await fetch(`/nearest-parking-spaces?latitude=${latitude}&longitude=${longitude}`);
+                const response = await fetch(`/nearest-parking-spaces?coordinates=${coordinates}`);
                 const parkingSpaces = await response.json();
 
                 const container = document.getElementById('parkingSpacesContainer');
