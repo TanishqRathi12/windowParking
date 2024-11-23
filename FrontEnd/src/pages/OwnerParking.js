@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+
 function OwnerParking() {
   const [parkingList, setparkingList] = useState([]);
 
@@ -17,6 +18,8 @@ function OwnerParking() {
   }, []);
 
   return (
+    <>
+    
     <div className="bg-gray-50 p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">
         Your Parkings
@@ -43,6 +46,8 @@ function OwnerParking() {
         ))}
       </ul>
     </div>
+    
+    </>
   );
 }
 

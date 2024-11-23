@@ -1,18 +1,51 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-
+import { useNavigate } from "react-router-dom";
 function AdminLogin() {
-  const [username, setusername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
-
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the login logic
-    console.log("Login attempted with:", { username, password });
-
+    
+    // Basic Validation
+    if (!email || !password) {
+      console.error("Email and password are required");
+      return;
+    }
+  
+    const body = JSON.stringify({ email, password });
+    const url = "http://localhost:5000/login";
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      });
+  
+      // Check if response is successful
+      if (response.ok) {
+        const data = await response.json(); // Parse response JSON
+        console.log("Login successful:", data);
+  
+        // Example: Redirect to another page or set user state
+      
+        
+        navigate(`/admin/:${data.adminId}`); // If using React Router
+      } else {
+        const errorData = await response.json();
+        console.error("Login failed:", errorData.message || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
   };
+  
 
   // const getIPLocation = async () => {
   //   try {
@@ -50,8 +83,8 @@ function AdminLogin() {
             <input
               id="name"
               type="text"
-              value={username}
-              onChange={(e) => setusername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

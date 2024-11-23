@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require("cors");
 const routes = require('./routes/routes'); // Import the routes
 
 const app = express();
@@ -6,7 +7,15 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Use the routes defined in route.js
+// Add CORS middleware **before** your routes
+app.use(cors({
+    origin: "http://localhost:3000", // Allow requests from this origin
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+    credentials: true, // Include cookies if necessary
+}));
+app.options("*", cors()); // Enable CORS for all preflight requests
+
+// Use the routes defined in routes.js
 app.use('/', routes);
 
 // Define a simple route to check server status

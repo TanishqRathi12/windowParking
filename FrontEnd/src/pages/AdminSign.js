@@ -1,16 +1,40 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 function AdminSign() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [mail, setmail] = useState("");
   const [error, setError] = useState(null);
-
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Here you would typically handle the login logic
-    console.log("Login attempted with:", { name, password,mail });
-    
+
+    const body = JSON.stringify({ adminName: name, email: mail, password: password });
+    const url = "http://localhost:5000/register";
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      });
+
+      // Check if response is successful
+      if (response.ok) {
+        const data = await response.json(); // Parse response JSON
+        console.log("signup successful:", data);
+
+        // Example: Redirect to another page or set user state
+        navigate(`/admin/:${data.adminData.id}`); // If using React Router
+      } else {
+        const errorData = await response.json();
+        console.error("Login failed:", errorData.message || "Unknown error");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
   };
 
   return (

@@ -13,7 +13,7 @@ function App() {
       element:<Home/>
     },
     {
-      path:"/admin",
+      path:"/admin/:id",
       element:<AdminPanel/>
     },
     {
