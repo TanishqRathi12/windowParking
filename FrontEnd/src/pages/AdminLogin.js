@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 function AdminLogin() {
-  const [name, setName] = useState("");
+  const [username, setusername] = useState("");
   const [password, setPassword] = useState("");
-  const [parking, setParking] = useState("");
   // const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Here you would typically handle the login logic
-    console.log("Login attempted with:", { name, password });
+    console.log("Login attempted with:", { username, password });
 
   };
 
@@ -46,13 +45,13 @@ function AdminLogin() {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Name
+              Username
             </label>
             <input
               id="name"
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={username}
+              onChange={(e) => setusername(e.target.value)}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -71,22 +70,6 @@ function AdminLogin() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Parking Location
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={parking}
-              onChange={(e) => setParking(e.target.value)}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

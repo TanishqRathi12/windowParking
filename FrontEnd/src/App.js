@@ -4,7 +4,7 @@ import AdminLogin from './pages/AdminLogin'
 import AdminSign from './pages/AdminSign'
 import Available from './pages/Available'
 import Home from './pages/Home'
-import Admin from './pages/Admin'
+import AdminPanel from './pages/AdminPanel'
 
 function App() {
   const router =  createBrowserRouter([
@@ -14,7 +14,7 @@ function App() {
     },
     {
       path:"/admin",
-      element:<Admin/>
+      element:<AdminPanel/>
     },
     {
       path:"/available/*",

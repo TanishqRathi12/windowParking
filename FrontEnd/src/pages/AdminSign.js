@@ -3,14 +3,13 @@ import React, { useState } from "react";
 function AdminSign() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [parking, setParking] = useState("");
-  const [region, setregion] = useState("");
+  const [mail, setmail] = useState("");
   const [error, setError] = useState(null);
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Here you would typically handle the login logic
-    console.log("Login attempted with:", { name, password, parking,region });
+    console.log("Login attempted with:", { name, password,mail });
     
   };
 
@@ -38,6 +37,22 @@ function AdminSign() {
             />
           </div>
 
+          <div className="space-y-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Enter mail
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={mail}
+              onChange={(e) => setmail(e.target.value)}
+              required
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           {/* Password Field */}
           <div className="space-y-2">
             <label
@@ -55,45 +70,13 @@ function AdminSign() {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Region
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={region}
-              onChange={(e) => setregion(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Parking
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={parking}
-              onChange={(e) => setParking(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
 
           {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Login
+            SignUp
           </button>
         </form>
 
