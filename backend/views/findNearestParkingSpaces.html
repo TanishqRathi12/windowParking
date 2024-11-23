@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nearest Parking Spaces</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"], button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #45a049;
+        }
+        .parking-space {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Find Nearest Parking Spaces</h2>
+    <form id="locationForm">
+        <label for="coordinates">Enter Coordinates (Latitude, Longitude):</label>
+        <input type="text" id="coordinates" name="coordinates" placeholder="Latitude, Longitude" required>
+        <button type="button" id="getLocationButton">Get My Location</button>
+        <input type="submit" value="Find Parking Spaces">
+    </form>
+
+    <div id="parkingSpacesContainer"></div>
+
+    <script>
+        document.getElementById('getLocationButton').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    document.getElementById('coordinates').value = `${latitude}, ${longitude}`;
+                }, function(error) {
+                    alert('Error getting location: ' + error.message);
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        document.getElementById('locationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const coordinates = document.getElementById('coordinates').value;
+            const [latitude, longitude] = coordinates.split(',').map(coord => coord.trim());
+
+            try {
+                const response = await fetch(`/nearest-parking-spaces?latitude=${latitude}&longitude=${longitude}`);
+                const parkingSpaces = await response.json();
+
+                const container = document.getElementById('parkingSpacesContainer');
+                container.innerHTML = ''; // Clear existing content
+
+                if (parkingSpaces.length === 0) {
+                    container.innerText = 'No nearby parking spaces found.';
+                } else {
+                    parkingSpaces.forEach(space => {
+                        const spaceDiv = document.createElement('div');
+                        spaceDiv.className = 'parking-space';
+                        spaceDiv.innerHTML = `
+                            <strong>${space.locationName}</strong><br>
+                            Location: ${space.latitude}, ${space.longitude}<br>
+                            Price per Vehicle: $${space.pricePerVehicle}<br>
+                            Distance: ${space.distance.toFixed(2)} km
+                        `;
+                        container.appendChild(spaceDiv);
+                    });
+                }
+            } catch (error) {
+                console.error('Error finding parking spaces:', error);
+                document.getElementById('parkingSpacesContainer').innerText = 'Error loading parking spaces.';
+            }
+        });
+    </script>
+</body>
+</html>

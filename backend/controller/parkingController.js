@@ -4,6 +4,8 @@ const { getItemData, getTableData } = require('./dynamo');
 const { generateHash } = require('../utils/hashUtils');
 const { unmarshall } = require('@aws-sdk/util-dynamodb');
 
+const { haversineDistance } = require('../utils/geoUtils');
+
 // Add a new parking space
 const addParkingSpace = async (adminId, spaceData) => {
     console.log(spaceData);
@@ -38,6 +40,23 @@ const getAllParkingSpaces = async (adminId) => {
     const data = await getTableData(tableName);
     return data.map(item => unmarshall(item));
 };
+
+const findNearestParkingSpaces = async (adminId, latitude, longitude, maxDistance = 5) => {
+    const allSpaces = await getAllParkingSpaces(adminId);
+    const nearbySpaces = allSpaces.filter(space => {
+        const distance = haversineDistance(latitude, longitude, space.latitude, space.longitude);
+        return distance <= maxDistance;
+    });
+
+    return nearbySpaces.map(space => ({
+        locationName: space.locationName,
+        latitude: space.latitude,
+        longitude: space.longitude,
+        pricePerVehicle: space.pricePerVehicle,
+        distance: haversineDistance(latitude, longitude, space.latitude, space.longitude)
+    }));
+};
+
 
 module.exports = {
     addParkingSpace,
