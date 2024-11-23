@@ -1,6 +1,7 @@
 const express = require('express');
 const { registerAdmin,loginAdmin } = require('../controller/dynamo');
 const path = require('path');
+const { addParkingSpace } = require('../controller/parkingController');
 
 const router = express.Router();
 
@@ -48,5 +49,29 @@ router.get('/adminPortal', (req, res) => {
     res.sendFile(path.join(__dirname, '../views', 'adminPortal.html'));
 });
 
+router.get('/addParkingSpace.html', (req, res) => {
+    const adminId = req.query.adminId;
+    if (!adminId) {
+        return res.status(400).json({ error: 'Admin ID is required' });
+    }
+
+    // Serve the addParkingSpace.html file
+    res.sendFile(path.join(__dirname, '../views', 'addParkingSpace.html'));
+});
+
+
+router.post('/parking-spaces', async (req, res) => {
+    const { adminId, locationName, location, regionCapacity, pricePerVehicle } = req.body;
+
+    try {
+        const [latitude, longitude] = location.split(',').map(coord => coord.trim());
+        const spaceData = { locationName, latitude, longitude, regionCapacity, pricePerVehicle };
+        const parkingSpace = await addParkingSpace(adminId, spaceData);
+        res.status(201).json({ message: 'Parking space added successfully', parkingSpace });
+    } catch (error) {
+        console.error("Error adding parking space:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 module.exports = router;
